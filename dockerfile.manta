@@ -1,0 +1,35 @@
+# ubuntu:16.04のイメージを取得
+FROM ubuntu:16.04
+
+# 環境変数の設定
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+
+# 必要なパッケージのインストール
+# ubuntu:16.04のデフォルトのpythonパッケージはpython2.7なので大丈夫
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    gzip \
+    bzip2 \
+    gcc \
+    g++ \
+    make \
+    python \
+    zlib1g-dev
+
+
+# Manta-v1.6.0のインストール
+# Manta のバージョンを指定
+ENV MANTA_VERSION=1.6.0
+RUN wget https://github.com/Illumina/manta/releases/download/v${MANTA_VERSION}/manta-${MANTA_VERSION}.release_src.tar.bz2
+
+#解凍
+RUN tar -xjf manta-${MANTA_VERSION}.release_src.tar.bz2
+
+
+# Manta のバイナリや関連ファイルが /opt/manta 以下に配置されます
+RUN mkdir build && cd build && \
+    ../manta-${MANTA_VERSION}.release_src/configure --jobs=4 --prefix=/opt/manta && \
+    make -j4 install

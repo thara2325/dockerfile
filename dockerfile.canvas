@@ -1,0 +1,62 @@
+#ubuntu:18.04のイメージを使用
+FROM ubuntu:18.04
+
+
+# 環境変数の設定
+ENV DEBIAN_FRONTEND=noninteractive
+
+
+
+# 必要なパッケージのインストール
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    gzip \
+    libicu-dev 
+
+
+
+
+# .NET Core2.1
+# 作業ディレクトリの設定
+WORKDIR /dotnet
+
+# .NET Coreのインストール
+RUN wget https://download.visualstudio.microsoft.com/download/pr/5797d98a-8faf-472d-925c-931ac542d3c8/e48942da88f4d9d653a7b5c0790e7724/dotnet-sdk-2.1.818-linux-x64.tar.gz
+
+# dotnetの解凍
+RUN tar -xzvf dotnet-sdk-2.1.818-linux-x64.tar.gz
+
+# 環境変数パスの追加
+ENV PATH="/dotnet:$PATH"
+
+
+
+# Canvas
+# 作業ディレクトリの設定
+WORKDIR /canvas-app
+
+# Canvasをgithubからインストール
+RUN wget https://github.com/Illumina/canvas/releases/download/1.40.0.1613%2Bmaster/Canvas-1.40.0.1613.master_x64.tar.gz
+
+# 解凍
+RUN tar -xzvf Canvas-1.40.0.1613.master_x64.tar.gz
+
+# 実行権を付与
+RUN chmod +x ./Canvas-1.40.0.1613+master_x64/Canvas
+
+## 環境変数パスの追加
+ENV PATH="/canvas-app/Canvas-1.40.0.1613+master_x64:$PATH"
+
+
+
+## デフォルトコマンドを設定
+#ENTRYPOINT["Canvas"]
+#CMD ["-h"]
+
+
+# 環境変数の設定
+ENV COMPlus_gcAllowVeryLargeObjects=1
+
+## ENTRYPOINT の修正
+# ENTRYPOINT ["dotnet", "/canvas-app/Canvas-1.40.0.1613+master_x64/Canvas.dll"]

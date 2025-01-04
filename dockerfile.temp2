@@ -1,0 +1,23 @@
+# ubuntu:20.04のイメージを取得
+FROM ubuntu:20.04
+
+# 必要なパッケージのインストール
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    perl \
+    bioperl \
+    bwa \
+    samtools \
+    bedtools \
+    python3 python \
+    unzip
+
+# 作業ディレクトリの設定
+WORKDIR /temp2-app
+
+# TEMP2のインストール
+RUN wget https://github.com/weng-lab/TEMP2/archive/refs/tags/v1.0.0.tar.gz
+
+# 解凍
+RUN tar -zxvf v1.0.0.tar.gz
