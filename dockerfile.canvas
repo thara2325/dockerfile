@@ -50,6 +50,11 @@ ENV PATH="/canvas-app/Canvas-1.40.0.1613+master_x64:$PATH"
 
 
 
+# コンテでの作業ディレクトリの設定
+WORKDIR /canvas-app/Canvas-1.40.0.1613+master_x64
+
+
+
 ## デフォルトコマンドを設定
 #ENTRYPOINT["Canvas"]
 #CMD ["-h"]
